@@ -27,3 +27,21 @@ def step_generator(curr, R, C, northWall, eastWall, visited_gen, gen_stack):
     elif gen_stack:
         return gen_stack.pop()
     return None
+
+def step_solver(curr, END_NODE, R, C, northWall, eastWall, visited_solve, solve_stack):
+    r, c = curr
+    visited_solve[r][c] = True
+    if (r, c) == END_NODE: return (r, c), True
+
+    moves = []
+    if r < R-1 and not northWall[r+1][c] and not visited_solve[r+1][c]: moves.append((r+1, c))
+    if r > 0 and not northWall[r][c] and not visited_solve[r-1][c]: moves.append((r-1, c))
+    if c < C-1 and not eastWall[r][c+1] and not visited_solve[r][c+1]: moves.append((r, c+1))
+    if c > 0 and not eastWall[r][c] and not visited_solve[r][c-1]: moves.append((r, c-1))
+
+    if moves:
+        solve_stack.append((r, c))
+        return random.choice(moves), False
+    elif solve_stack:
+        return solve_stack.pop(), False
+    return curr, True
